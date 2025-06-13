@@ -1,38 +1,38 @@
-import React, { useContext } from 'react';
-import { Title, Subtitle } from '../../styles/General.style';
-import { ModalHeader, ModalBody, ModalFooter } from '../../Modal';
-import Button from '../../Button/Button';
-import { GameContext } from '../../contexts/GameContext';
-import { ModalContext } from '../../contexts/ModalContext';
+import { useContext } from "react";
+import { GameContext } from "../contexts/GameContext";
+import { ModalContext } from "../contexts/ModalContext";
+import { ModalTitle, ModalBody, ModalFooter, ModalButton } from "./Modal.styled";
 
-function RoundOverModal() {
-  const { resetBoard } = useContext(GameContext);
-  const { handModal } = useContext(ModalContext);
+const RoundOverModal = ({ winner }) => {
+  const gameContext = useContext(GameContext);
+  const { closeModal } = useContext(ModalContext);
+
+  const handleContinue = () => {
+    gameContext.resetBoard();
+    closeModal();
+  };
+
+  const handleRestart = () => {
+    gameContext.resetGame();
+    closeModal();
+  };
 
   return (
     <>
-      <ModalHeader>
-        <Title primary>Akhil Wins Round</Title>
-      </ModalHeader>
+      <ModalTitle>
+        {winner === "Draw" ? "Game Draw!" : `${winner} Wins!`}
+      </ModalTitle>
       <ModalBody>
-        <Subtitle primary>Choices will be switched now.</Subtitle>
-        <Subtitle primary>Akhil: 1</Subtitle>
-        <Subtitle primary>Harjot: 1</Subtitle>
+        <p>Current Scores:</p>
+        <p>{gameContext.game.player1.name}: {gameContext.game.player1.score}</p>
+        <p>{gameContext.game.player2.name}: {gameContext.game.player2.score}</p>
       </ModalBody>
       <ModalFooter>
-        <Button
-          color="#F9C81B"
-          onClick={() => {
-            handModal();
-            resetBoard();
-          }}
-        >
-          Continue
-        </Button>
-        <Button color="#8437F9">Restart</Button>
+        <ModalButton onClick={handleContinue}>Continue</ModalButton>
+        <ModalButton onClick={handleRestart}>Restart</ModalButton>
       </ModalFooter>
     </>
   );
-}
+};
 
 export default RoundOverModal;

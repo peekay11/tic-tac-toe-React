@@ -1,21 +1,40 @@
-import React, { useContext } from 'react';
-import ReactDOM from 'react-dom';
-import { ModalBackdrop } from './Modal.styled';
-import { ModalContext } from "../contexts/ModalContext";
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
+import { ModalOverlay, ModalContainer } from "./Modal.styled";
 
-function ModalTemplate() {
-  const { handleModal, modalContent, modal } = useContext(ModalContext);
+const ModalTemplate = ({ children, onClose }) => {
+  useEffect(() => {
+    console.log("ModalTemplate mounted"); // Debug log
+    
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
 
-  if (modal) {
-    return ReactDOM.createPortal(
-      <ModalBackdrop onClick={handleModal}>
-        {modalContent}
-      </ModalBackdrop>,
-      document.getElementById('modal-root')
-    );
-  }
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
 
-  return null;
-}
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [onClose]);
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return createPortal(
+    <ModalOverlay onClick={handleOverlayClick}>
+      <ModalContainer onClick={(e) => e.stopPropagation()}>
+        {children}
+      </ModalContainer>
+    </ModalOverlay>,
+    document.getElementById('modal-root')
+  );
+};
 
 export default ModalTemplate;

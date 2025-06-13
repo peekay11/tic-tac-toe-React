@@ -5,9 +5,10 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    $(props)=>props.theme.media.mobile{
-font-size:11px;
-    }
+  }
+
+  @media (max-width: 768px) {
+    font-size: 11px;
   }
 
   body {

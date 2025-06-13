@@ -1,49 +1,33 @@
 // src/pages/Game/Game.jsx
 import React, { useContext } from "react";
-import { createContext, useState } from "react";
+import { Container, Title } from "../../styles/General.styled";
+import { GameBoardStyle } from "./Game.styled";
+import { GameContext } from "../../contexts/GameContext";
+import GameCell from "../../GameCell/GameCell";
+import MusicPlay from "../../components/MusicPlayer/MusicPlay";
 
-// Context setup
-export const GameContext = createContext({});
-
-export const GameContextProvider = (props) => {
-  const [game, setGame] = useState({
-    board: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-  });
-
-  const updateBoard = (index) => {
-    if (game.board[index] === "x" || game.board[index] === "o") return;
-    const updatedBoard = [...game.board];
-    updatedBoard[index] = "x";
-    setGame({ ...game, board: updatedBoard });
-  };
-
-  return (
-    <GameContext.Provider value={{ game, updateBoard }}>
-      {props.children}
-    </GameContext.Provider>
-  );
-};
-
-// Page component for routing
 function Game() {
-  const { game, updateBoard } = useContext(GameContext);
+  const { game } = useContext(GameContext);
+
+  if (!game) {
+    return (
+      <Container>
+        <Title>Loading...</Title>
+      </Container>
+    );
+  }
 
   return (
-    <div>
-      <h1>Tic Tac Toe</h1>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 100px)", gap: "10px" }}>
+    <Container>
+      <MusicPlay />
+      <Title>Tic Tac Toe</Title>
+      <GameBoardStyle>
         {game.board.map((cell, index) => (
-          <button
-            key={index}
-            style={{ height: "100px", fontSize: "2rem" }}
-            onClick={() => updateBoard(index)}
-          >
-            {cell}
-          </button>
+          <GameCell key={index} cellItem={cell} index={index} />
         ))}
-      </div>
-    </div>
+      </GameBoardStyle>
+    </Container>
   );
 }
 
-export default Game; // ✅ This satisfies the default import in Router.jsx
+export default Game;

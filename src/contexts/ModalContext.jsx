@@ -1,17 +1,28 @@
-import { useState, createContext } from 'react';
-import { useModal } from '../hooks/useModal';
-import ModalTemplate from '../Modal/ModalTemplate';
-export const ModalContext = createContext({});
+import React, { createContext, useState, useContext } from 'react';
+import CustomModal from '../Modal/CustomModal';
 
-function ModalContextProvider({ children }) {
-  const { modal, modalContent, handleModal } = useModal();
+export const ModalContext = createContext();
+
+const ModalContextProvider = ({ children }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleModal = () => {
+    if (!isOpen) {
+      console.log('Opening modal with CustomModal component');
+      setIsOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   return (
-    <ModalContext.Provider value={{ modal, modalContent, handleModal }}>
-      <ModalTemplate />
+    <ModalContext.Provider value={{ isOpen, handleModal, closeModal }}>
       {children}
+      {isOpen && <CustomModal />}
     </ModalContext.Provider>
   );
-}
+};
 
 export default ModalContextProvider;

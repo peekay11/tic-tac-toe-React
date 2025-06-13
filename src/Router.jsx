@@ -1,23 +1,27 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Game from "./pages/Game/Game";
 import Details from "./pages/Details/Details";
 import Header from "./components/Header/Header";
-import ModalTemplate from "./Modal/ModalTemplate";
+import ModalContextProvider from './contexts/ModalContext';
+import { GameContextProvider } from './contexts/GameContext';
 
-function Router() {
+function AppRouter() {
   return (
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="details" element={<Details />} />
-        <Route path="game-on" element={<Game />} />
-      </Routes>
-      <ModalTemplate />
-    </BrowserRouter>
+    <Router>
+      <ModalContextProvider>
+        <GameContextProvider>
+          <Header />
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="details" element={<Details />} />
+            <Route path="game-on" element={<Game />} />
+          </Routes>
+        </GameContextProvider>
+      </ModalContextProvider>
+    </Router>
   );
 }
 
-export default Router;
+export default AppRouter;
