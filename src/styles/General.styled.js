@@ -10,6 +10,7 @@ export const Container = styled.div`
   background-color: ${(props) => props.theme.colors.primary};
   padding: 0 2rem;
   text-align: center;
+  
 `;
 
 export const Title = styled.h1`
